@@ -81,6 +81,22 @@ namespace Trash.Services
             return userlocations;
         }
 
+        public async Task AddUserLocation(long userid,List<UserLocationReport> userLocations)
+        {
+            foreach(UserLocationReport item in userLocations)
+            {
+                _Context.Set<UserLocation>().Add(new UserLocation()
+                {
+                    Address = item.Address,
+                    Description = item.Description,
+                    Latitude = item.Latitude,
+                    Longitude = item.Longitude,
+                    UserId = userid
+                });
+            }
+            await _Context.SaveChangesAsync();
+        }
+
         public async Task<UserService> AddUserService(long userid ,long serviceid)
         {
             var entity = _Context.Set<UserService>().Add(new UserService()

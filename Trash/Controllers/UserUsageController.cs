@@ -64,6 +64,18 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+        [HttpPost("userlocations")]
+        public async Task<IActionResult> AddUserLocation([FromBody] List<UserLocationReport> userLocations)
+        {
+            if(userLocations == null)
+            {
+                return BadRequest(new ApiResult() { Message = "ادرس های ارسالی معتبر نمیباشد", IsSuccess = false, StatusCode = ApiResultStatusCode.ListEmpty });
+            }
+            long userid = int.Parse(HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
+            await _UserUsageService.AddUserLocation(userid, userLocations);
+            return Ok(new ApiResult() { IsSuccess = true, StatusCode = ApiResultStatusCode.Success });
+        }
+
         [HttpPost("userservice")]
         public async Task<IActionResult> AddUserService(long serviceid)
         {
