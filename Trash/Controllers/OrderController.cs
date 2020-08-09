@@ -41,6 +41,22 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+        /// <summary>
+        /// usable for drivers to get the WaitingOrders
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("waitingorders")]
+        public async Task<IActionResult> GetWaitingOrders()
+        {
+            var ApiResult = new ApiResult<List<WaitingOrder>>()
+            {
+                Data = await _UserOrderService.GetWaitingOrders(),
+                IsSuccess = true,
+                StatusCode = ApiResultStatusCode.Success
+            };
+            return Ok(ApiResult);
+        }
+
         public async Task<IActionResult> PostOrder(OrderRequest orderRequest)
         {
             if (orderRequest == null)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trash.Models.Enums;
 
 namespace Trash.Models.TransferModels
 {
@@ -18,6 +19,7 @@ namespace Trash.Models.TransferModels
         public DateTime SubmitDate { get; set; }
         public DateTime TakenDate { get; set; }
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has
+        public int OrderStatus { get; set; }
         public string Description { get; set; }
     }
 }
