@@ -32,7 +32,7 @@ namespace Trash.Models.ContextModels
 
         public User User { get; set; }
         public UserLocation UserLocation { get; set; }
-        public Driver Driver { get; set; }
+        public User Driver { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.SecurityTokenService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,23 @@ namespace Trash.Services
             return waitingorders;
         }
 
+        public async Task SetDriver(long driverid, long orderid)
+        {
+            var order = await _Table.Where(x => x.Id == orderid).FirstAsync();
+            if(order != null)
+            {
+                order.DriverId = driverid;
+                order.OrderStatus = Models.Enums.OrderStatus.Confirmed;
+                await Update(order);
+            }
+            throw new ArgumentNullException();
+        }
+
+        public async Task<long> GetUserIdByOrderId(long orderid)
+        {
+            return await _Table.Where(x => x.Id == orderid).Select(v => v.UserId).FirstAsync();
+        }
+
         public async Task<List<OrderReport>> GetUserOrdersByDate(long userid,DateTime date)
         {
             var orders = await _Table.Include(v => v.User).Include(o => o.Driver).Include(p => p.UserLocation).Where(c => c.UserId == userid && c.SubmitDate >= date && c.OrderStatus == Models.Enums.OrderStatus.Done).ToListAsync();
@@ -110,6 +128,24 @@ namespace Trash.Services
             };
             await Add(Order);
             return Order;
+        }
+
+        /// <summary>
+        /// when driver check the correctness of user trashs weight and reall score
+        /// </summary>
+        /// <param name="orderReport"></param>
+        /// <returns></returns>
+        public async Task UpdateUserOrders(DriverOrderReport orderReport)
+        {
+            var order = await GetById(orderReport.OrderId);
+            var trashes = await _TrashService.GetTrashesByOrderId(orderReport.OrderId);
+            foreach(DriverTrashReport item in orderReport.TrashReports)
+            {
+                var trash = trashes.Where(x => x.Id == item.TrashId).First();
+                trash.Weight = item.Weight;
+                trash.Score = item.Score;
+                await _TrashService.Update(trash);
+            }
         }
     }
 }

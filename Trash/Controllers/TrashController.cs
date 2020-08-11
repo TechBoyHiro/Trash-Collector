@@ -25,6 +25,10 @@ namespace Trash.Controllers
             _TrashTypeService = TrashTypeService;
         }
 
+        /// <summary>
+        /// get history of user trashes ... how many trashes does he/she has?
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("usertrash")]
         public async Task<IActionResult> GetUserTrashs()
         {
@@ -42,6 +46,12 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+
+        /// <summary>
+        /// get history of user trashes filtered by trashtype ... how many trashes in given trashtype does he/she has?
+        /// </summary>
+        /// <param name="trashtypeid"></param>
+        /// <returns></returns>
         [HttpGet("usertrashtype")]
         public async Task<IActionResult> GetUserTrashByTrashType(long trashtypeid)
         {
@@ -59,6 +69,10 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+        /// <summary>
+        /// get all trashtype ...
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("trashtypes")]
         public async Task<IActionResult> GetTrashTypes()
         {
@@ -71,6 +85,13 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+
+        /// <summary>
+        /// update the price of trashtype ....
+        /// </summary>
+        /// <param name="trashtypeid"></param>
+        /// <param name="newprice"></param>
+        /// <returns></returns>
         [HttpGet("updatetrashtype")]
         public async Task<IActionResult> UpdateTrashType(long trashtypeid,double newprice)
         {
@@ -89,6 +110,11 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+        /// <summary>
+        /// set the trashes of order by user .... the correctness of scores and weights will check by driver ..... 
+        /// </summary>
+        /// <param name="trashRequests"></param>
+        /// <returns></returns>
         public async Task<IActionResult> SetOrderTrashes([FromBody] List<TrashRequest> trashRequests)
         {
             if (trashRequests == null)

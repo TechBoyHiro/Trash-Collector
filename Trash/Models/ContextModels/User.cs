@@ -28,6 +28,8 @@ namespace Trash.Models.ContextModels
         public byte[] PasswordSalt {get;set;}
         public DateTime? RegisterDate { get; set; }
         public bool? IsDeleted { get; set; }
+        public bool IsDriver { get; set; }
+        public bool? IsAvailable { get; set; }
 
         // Navigation Properties
         

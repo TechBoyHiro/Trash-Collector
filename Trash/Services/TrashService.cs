@@ -19,6 +19,22 @@ namespace Trash.Services
             _Context = context;
         }
 
+        /// <summary>
+        /// used for updating user trash when driver check the correctness of user trashes
+        /// </summary>
+        /// <param name="orderid"></param>
+        /// <returns></returns>
+        public async Task<List<Models.ContextModels.Trash>> GetTrashesByOrderId(long orderid)
+        {
+            return (await _Table.Where(x => x.OrderId == orderid).ToListAsync());
+        }
+
+        public async Task UpdateRange(List<Models.ContextModels.Trash> trashes)
+        {
+            _Table.UpdateRange(trashes);
+            await _Context.SaveChangesAsync();
+        }
+
         public async Task<List<TrashReport>> GetUserTrashs(long userid)
         {
             var Trashes = await _Table.Include(k => k.User).Include(p => p.TrashType).Include(l => l.Order).Where(x => x.UserId == userid).ToListAsync();

@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace Trash.Models.ContextModels
 {
-    public class Driver
+    public class DriverUtility
     {
         public long Id { get; set; }
-        public string Name { get; set; }
-        public string UserName { get; set; }
-        [Required]
-        public string Phone { get; set; }
+        public long DriverId { get; set; }
         public string ImageUrl { get; set; }
-        [Range(1,100)]
-        public int Age { get; set; }
+        [Range(1, 100)]
         public string CarModel { get; set; }
         public string CarColor { get; set; }
         [Required]
@@ -25,6 +21,6 @@ namespace Trash.Models.ContextModels
 
         // Navigation Properties
 
-        public ICollection<Order> Orders { get; set; }
+        public User Driver { get; set; }
     }
 }

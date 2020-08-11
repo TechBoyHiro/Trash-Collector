@@ -23,6 +23,11 @@ namespace Trash.Controllers
             _UserOrderService = orderService;
         }
 
+
+        /// <summary>
+        /// get history of pervious user orders ... mostly used for reports
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("userorders")]
         public async Task<IActionResult> GetUserOrders()
         {
@@ -35,6 +40,23 @@ namespace Trash.Controllers
             var ApiResult = new ApiResult<List<OrderReport>>()
             {
                 Data = await _UserOrderService.GetUserOrders(userid),
+                IsSuccess = true,
+                StatusCode = ApiResultStatusCode.Success
+            };
+            return Ok(ApiResult);
+        }
+
+
+        /// <summary>
+        /// get a owner userid of given order .... which user own thid order ?
+        /// </summary>
+        /// <param name="orderid"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetUserIdByOrderId(long orderid)
+        {
+            var ApiResult = new ApiResult<object>()
+            {
+                Data = await _UserOrderService.GetUserIdByOrderId(orderid),
                 IsSuccess = true,
                 StatusCode = ApiResultStatusCode.Success
             };
@@ -57,6 +79,12 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+
+        /// <summary>
+        /// add a new order bu user
+        /// </summary>
+        /// <param name="orderRequest"></param>
+        /// <returns></returns>
         public async Task<IActionResult> PostOrder(OrderRequest orderRequest)
         {
             if (orderRequest == null)

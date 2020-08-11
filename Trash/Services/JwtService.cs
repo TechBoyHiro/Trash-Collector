@@ -45,6 +45,8 @@ namespace Trash.Services
         public IEnumerable<Claim> GetClaims(User user)
         {
             var claims = new List<Claim>();
+            if (user.IsDriver)
+                claims.Add(new Claim(ClaimTypes.Role, "driver"));
             claims.Add(new Claim(ClaimTypes.Role, "user"));
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));

@@ -24,6 +24,10 @@ namespace Trash.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// used to get all users
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
@@ -37,6 +41,11 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+
+        /// <summary>
+        /// get a user by userid hidden in token
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById()
         {
@@ -52,17 +61,23 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
-        [HttpPost]
+
+        /// <summary>
+        /// add a regular user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost("adduser")]
         [AllowAnonymous]
-        public async Task<IActionResult> Add(NewUserRequest user)
+        public async Task<IActionResult> AddUser(NewUserRequest user)
         {
             if (user == null)
             {
                 return BadRequest(new ApiResult() { Message = "کاربر یافت نشد", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
             }
-            if(_authService.CheckUserExist(user.Phone).Result)
+            if(_authService.CheckUserExist(user.Phone,user.UserName).Result)
             {
-                return BadRequest(new ApiResult() { Message = "شماره تلفن تکراری است",IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest});
+                return BadRequest(new ApiResult() { Message = "شماره تلفن یا نام کاربری تکراری است",IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest});
             }
             await _authService.AddUser(new User()
             {
@@ -73,20 +88,59 @@ namespace Trash.Controllers
                 Email = user.Email,
                 Gender = user.Gender,
                 IsDeleted = false,
-                RegisterDate = DateTime.UtcNow
-                
+                RegisterDate = DateTime.UtcNow,
+                IsDriver = false,
             },user.Password);
             return Ok();
         }
 
+        /// <summary>
+        /// add a driver 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpGet("Adddriver")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddDriver(NewUserRequest user)
+        {
+            if (user == null)
+            {
+                return BadRequest(new ApiResult() { Message = "کاربر یافت نشد", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
+            }
+            if (_authService.CheckUserExist(user.Phone,user.UserName).Result)
+            {
+                return BadRequest(new ApiResult() { Message = "شماره تلفن یا نام کاربری تکراری است", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
+            }
+            await _authService.AddUser(new User()
+            {
+                Name = user.Name,
+                UserName = user.UserName,
+                Phone = user.Phone,
+                Age = user.Age,
+                Email = user.Email,
+                Gender = user.Gender,
+                IsDeleted = false,
+                RegisterDate = DateTime.UtcNow,
+                IsDriver = true,
+                IsAvailable = true
+            }, user.Password);
+            return Ok();
+        }
+
+
+        /// <summary>
+        /// login for users and drivers ...
+        /// </summary>
+        /// <param name="loginRequest"></param>
+        /// <returns></returns>
         [HttpGet("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             var user = await _authService.GetByUserAndPass(loginRequest.UserName, loginRequest.Password);
-            if(user != null)
+            if (user != null)
             {
-                var ApiResult = new ApiResult<string>() 
+                var ApiResult = new ApiResult<string>()
                 {
                     Data = _authService.GenerateToken(user),
                     StatusCode = ApiResultStatusCode.Success,
@@ -94,7 +148,7 @@ namespace Trash.Controllers
                 };
                 return Ok(ApiResult);
             }
-            return BadRequest(new ApiResult() { Message = "نام کاربری یا رمز عبور اشتباه است" ,IsSuccess = false, StatusCode = ApiResultStatusCode.NotFound});
+            return BadRequest(new ApiResult() { Message = "نام کاربری یا رمز عبور اشتباه است", IsSuccess = false, StatusCode = ApiResultStatusCode.NotFound });
         }
     }
 }

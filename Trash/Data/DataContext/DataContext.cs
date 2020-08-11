@@ -41,7 +41,7 @@ namespace Trash.Data.DataContext
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Driver> Drivers { get; set; }
+        public DbSet<DriverUtility> DriverUtilities { get; set; }
         public DbSet<Commodity> Commodities { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Purchase> Purchases { get; set; }

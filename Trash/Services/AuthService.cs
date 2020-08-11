@@ -35,10 +35,13 @@ namespace Trash.Services
             await Add(user);
         }
 
-        public async Task<bool> CheckUserExist(string PhoneNumber)
+        public async Task<bool> CheckUserExist(string PhoneNumber,string UserName)
         {
-            var user = await TableNoTracking.AnyAsync(x => x.Phone == PhoneNumber);
-            return user;
+            var phone = await TableNoTracking.AnyAsync(x => x.Phone == PhoneNumber);
+            if (phone)
+                return phone;
+            var username = await TableNoTracking.AnyAsync(x => x.UserName == UserName);
+            return username;
         }
 
         public async Task<User> GetByUserAndPass(string username,string password)
