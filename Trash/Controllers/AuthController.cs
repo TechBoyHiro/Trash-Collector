@@ -137,6 +137,16 @@ namespace Trash.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
+            if(loginRequest == null)
+            {
+                var ApiResult = new ApiResult()
+                {
+                    Message = "اطلاعات وارد شده صحیح نمیباشد",
+                    StatusCode = ApiResultStatusCode.Success,
+                    IsSuccess = true
+                };
+                return BadRequest(ApiResult);
+            }
             var user = await _authService.GetByUserAndPass(loginRequest.UserName, loginRequest.Password);
             if (user != null)
             {
