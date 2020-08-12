@@ -12,6 +12,7 @@ namespace Trash.Models.TransferModels
         public long UserId { get; set; }
         [Required]
         public long UserLocationId { get; set; }
+        public List<TrashRequest> Trashes { get; set; }
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has
         [StringLength(500)]
         public string Description { get; set; }

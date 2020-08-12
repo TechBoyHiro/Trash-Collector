@@ -98,16 +98,16 @@ namespace Trash.Services
             return TrashReport;
         }
 
-        public async Task SetOrderTrashes(List<TrashRequest> trashRequests)
+        public async Task SetOrderTrashes(List<TrashRequest> trashRequests, long orderid, long userid)
         {
             foreach(TrashRequest item in trashRequests)
             {
                 await Add(new Models.ContextModels.Trash()
                 {
-                    OrderId = item.OrderId,
+                    OrderId = orderid,
                     Score = item.Score,
                     TrashTypeId = item.TrashTypeId,
-                    UserId = item.UserId,
+                    UserId = userid,
                     Weight = item.Weight
                 });
             }

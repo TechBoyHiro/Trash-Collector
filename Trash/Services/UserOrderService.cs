@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.SecurityTokenService;
+using Microsoft.IdentityModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,8 +126,17 @@ namespace Trash.Services
                 PaymentMethod = Models.Enums.PaymentMethod.None,
                 OrderStatus = Models.Enums.OrderStatus.Waiting
             };
-            await Add(Order);
+            Order.Id = await AddOrder(Order);
+            await _TrashService.SetOrderTrashes(orderRequest.Trashes, Order.Id, orderRequest.UserId);
             return Order;
+        }
+
+
+        public async Task<long> AddOrder(Order order)
+        {
+            var obj = await _Table.AddAsync(order);
+            await _Context.SaveChangesAsync();
+            return obj.Entity.Id;
         }
 
         /// <summary>

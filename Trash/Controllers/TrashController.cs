@@ -115,17 +115,17 @@ namespace Trash.Controllers
         /// </summary>
         /// <param name="trashRequests"></param>
         /// <returns></returns>
-        public async Task<IActionResult> SetOrderTrashes([FromBody] List<TrashRequest> trashRequests)
-        {
-            if (trashRequests == null)
-                return BadRequest(new ApiResult()
-                {
-                    Message = "اشغال های وارد شده معتبر نمیباشند",
-                    IsSuccess = false,
-                    StatusCode = ApiResultStatusCode.BadRequest
-                });
-            await _TrashService.SetOrderTrashes(trashRequests);
-            return Ok(new ApiResult() { IsSuccess = true, StatusCode = ApiResultStatusCode.Success });
-        }
+        //public async Task<IActionResult> SetOrderTrashes([FromBody] List<TrashRequest> trashRequests)
+        //{
+        //    if (trashRequests == null)
+        //        return BadRequest(new ApiResult()
+        //        {
+        //            Message = "اشغال های وارد شده معتبر نمیباشند",
+        //            IsSuccess = false,
+        //            StatusCode = ApiResultStatusCode.BadRequest
+        //        });
+        //    await _TrashService.SetOrderTrashes(trashRequests);
+        //    return Ok(new ApiResult() { IsSuccess = true, StatusCode = ApiResultStatusCode.Success });
+        //}
     }
 }

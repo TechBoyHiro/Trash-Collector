@@ -8,9 +8,6 @@ namespace Trash.Models.TransferModels
 {
     public class TrashRequest
     {
-        public long UserId { get; set; }
-        [Required]
-        public long OrderId { get; set; }
         [Required]
         public long TrashTypeId { get; set; }
         [Required]

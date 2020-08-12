@@ -89,6 +89,14 @@ namespace Trash.Controllers
         {
             if (orderRequest == null)
                 return BadRequest(new ApiResult() { Message = "سفارش نامعتبر است", IsSuccess = false ,StatusCode = ApiResultStatusCode.BadRequest});
+            if (orderRequest.Trashes == null)
+                return BadRequest(new ApiResult()
+                {
+                    Message = "اشغال های وارد شده معتبر نمیباشند",
+                    IsSuccess = false,
+                    StatusCode = ApiResultStatusCode.BadRequest
+                });
+
             var ApiResult = new ApiResult<Order>()
             {
                 Data = await _UserOrderService.CreateUserOrder(orderRequest),
