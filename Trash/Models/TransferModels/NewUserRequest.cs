@@ -19,7 +19,7 @@ namespace Trash.Models.TransferModels
         [Required]
         public string UserName { get; set; }
 
-        public bool? Gender { get; set; }
+        public bool Gender { get; set; }
 
         [Required]
         [StringLength(255, MinimumLength = 4, ErrorMessage = "رمزعبور باید بین 4 تا 255 کاراکتر باشد")]
@@ -29,6 +29,6 @@ namespace Trash.Models.TransferModels
         public string Email { get; set; }
 
         [Range(1,100,ErrorMessage ="سن باید بین 0 تا 100 باشد")]
-        public int? Age { get; set; }
+        public int Age { get; set; }
     }
 }

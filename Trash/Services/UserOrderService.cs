@@ -25,26 +25,40 @@ namespace Trash.Services
 
         public async Task<List<OrderReport>> GetUserOrders(long userid)
         {
-            var orders = await _Table.Include(v => v.User).Include(o => o.Driver).Include(p => p.UserLocation).Where(c => c.UserId == userid).ToListAsync();
-            var OrderReports = new List<OrderReport>();
-            foreach(Order item in orders)
+            try
             {
-                OrderReports.Add(new OrderReport() {
-                    DriverId = item.DriverId,
-                    DriverUserName = item.Driver.UserName,
-                    OrderAddress = item.UserLocation.Address,
-                    OrderLat = item.UserLocation.Latitude,
-                    OrderLong = item.UserLocation.Longitude,
-                    SubmitDate = item.SubmitDate,
-                    TakenDate = (DateTime)item.TakenDate,
-                    TotalScore = item.TotalScore,
-                    Trashes = _TrashService.GetUserTrashsByOrderId(userid,item.Id).Result,
-                    UserId = item.UserId,
-                    UserName = item.User.UserName,
-                    OrderStatus = (int)item.OrderStatus
-                });
+                var orders = await _Table.Include(v => v.User).Include(o => o.Driver).Include(p => p.UserLocation).Where(c => c.UserId == userid).ToListAsync();
+                var OrderReports = new List<OrderReport>();
+                foreach (Order item in orders)
+                {
+                    var orderreport = new OrderReport()
+                    {
+                        DriverId = item.DriverId,
+                        OrderAddress = item.UserLocation.Address,
+                        OrderLat = item.UserLocation.Latitude,
+                        OrderLong = item.UserLocation.Longitude,
+                        SubmitDate = item.SubmitDate,
+                        TakenDate = item.TakenDate,
+                        TotalScore = item.TotalScore,
+                        UserId = item.UserId,
+                        UserName = item.User.UserName,
+                        OrderStatus = (int)item.OrderStatus
+                    };
+                    orderreport.Trashes = new List<TrashReport>();
+                    orderreport.Trashes = _TrashService.GetUserTrashsByOrderId(userid, item.Id).Result;
+                    if (item.Driver != null)
+                    {
+                        orderreport.DriverId = item.DriverId;
+                        orderreport.DriverUserName = item.Driver.UserName;
+                    }
+                    OrderReports.Add(orderreport);
+                }
+                return OrderReports;
             }
-            return OrderReports;
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         /// <summary>
@@ -79,6 +93,7 @@ namespace Trash.Services
                 order.DriverId = driverid;
                 order.OrderStatus = Models.Enums.OrderStatus.Confirmed;
                 await Update(order);
+                return;
             }
             throw new ArgumentNullException();
         }

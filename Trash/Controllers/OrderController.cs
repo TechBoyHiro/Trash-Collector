@@ -52,8 +52,11 @@ namespace Trash.Controllers
         /// </summary>
         /// <param name="orderid"></param>
         /// <returns></returns>
+        [HttpGet("getuserid")]
         public async Task<IActionResult> GetUserIdByOrderId(long orderid)
         {
+            if (orderid <= 0)
+                return BadRequest(new ApiResult() { Message = "سفارش نامعتبر است", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
             var ApiResult = new ApiResult<object>()
             {
                 Data = await _UserOrderService.GetUserIdByOrderId(orderid),
@@ -85,6 +88,7 @@ namespace Trash.Controllers
         /// </summary>
         /// <param name="orderRequest"></param>
         /// <returns></returns>
+        [HttpPost("addorder")]
         public async Task<IActionResult> PostOrder(OrderRequest orderRequest)
         {
             if (orderRequest == null)

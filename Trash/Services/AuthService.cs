@@ -25,14 +25,14 @@ namespace Trash.Services
             jwtService = jwt;
         }
 
-        public async Task AddUser(User user,string password)
+        public async Task<User> AddUser(User user,string password)
         {
             byte[] PasswordSalt = new byte[1024 / 8];
             PasswordSalt = Encoding.UTF8.GetBytes("#1184$+" + user.Phone);
             byte[] PasswordHash = CreatePasswordHash(password,PasswordSalt);
             user.PasswordHash = PasswordHash;
             user.PasswordSalt = PasswordSalt;
-            await Add(user);
+            return await Add(user);
         }
 
         public async Task<bool> CheckUserExist(string PhoneNumber,string UserName)

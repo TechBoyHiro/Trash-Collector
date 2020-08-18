@@ -32,10 +32,11 @@ namespace Trash.Data.Repositories
             await _Context.SaveChangesAsync();
         }
 
-        public async Task Add(T Object)
+        public async Task<T> Add(T Object)
         {
-            await _Table.AddAsync(Object);
+            var Entity = await _Table.AddAsync(Object);
             await _Context.SaveChangesAsync();
+            return Entity.Entity;
         }
 
         public async Task<T> Update(T Object)

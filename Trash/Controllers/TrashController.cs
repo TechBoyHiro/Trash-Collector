@@ -92,7 +92,7 @@ namespace Trash.Controllers
         /// <param name="trashtypeid"></param>
         /// <param name="newprice"></param>
         /// <returns></returns>
-        [HttpGet("updatetrashtype")]
+        [HttpPost("updatetrashtype")]
         public async Task<IActionResult> UpdateTrashType(long trashtypeid,double newprice)
         {
             if (trashtypeid == 0 || newprice < 0)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,7 +58,10 @@ namespace Trash.Configurations
                         //logger.LogError("Authentication failed.", context.Exception);
 
                         if (context.Exception != null)
-                            throw new Exception("bfhdsfgdhj");
+                        {
+                            return Task.FromException(new UnauthorizedAccessException("The Token Does not accepted"));
+                        }
+                            
 
                         return Task.CompletedTask;
                     },
@@ -68,8 +72,7 @@ namespace Trash.Configurations
                     },
                     OnChallenge = context =>
                     {
-                        context.Error = "sdgfdgfdgfd";
-                        throw new Exception("fdsfdsfsf");
+                        return Task.FromException(new UnauthorizedAccessException("The Token Does not accepted"));
                     }
                 };
             });
@@ -85,6 +88,7 @@ namespace Trash.Configurations
             services.AddScoped<TrashService>();
             services.AddScoped<UserOrderService>();
             services.AddScoped<UserUsageService>();
+            services.AddScoped<TrashTypeService>();
         }
 
         public static void AddDataBase(this IServiceCollection services,string ConnectionString)

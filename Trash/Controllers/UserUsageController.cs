@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Trash.InfraStructure;
+using Trash.Models.ContextModels;
 using Trash.Models.TransferModels;
 using Trash.Services;
 
@@ -22,6 +23,30 @@ namespace Trash.Controllers
             _UserUsageService = userUsageService;
         }
 
+
+        [HttpGet("getcommodities")]
+        public async Task<IActionResult> GetCommodities()
+        {
+            var ApiResult = new ApiResult<List<Commodity>>()
+            {
+                Data = await _UserUsageService.GetCommodities(),
+                IsSuccess = true,
+                StatusCode = ApiResultStatusCode.Success
+            };
+            return Ok(ApiResult);
+        }
+
+        [HttpGet("getservices")]
+        public async Task<IActionResult> GetServices()
+        {
+            var ApiResult = new ApiResult<List<Service>>()
+            {
+                Data = await _UserUsageService.GetServices(),
+                IsSuccess = true,
+                StatusCode = ApiResultStatusCode.Success
+            };
+            return Ok(ApiResult);
+        }
 
         [HttpGet("userservices")]
         public async Task<IActionResult> GetUserServices()
@@ -95,6 +120,7 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+        [HttpPost("addcommodity")]
         public async Task<IActionResult> AddUserCommodity(long commodityid, int number)
         {
             if (commodityid == 0 || number == 0)

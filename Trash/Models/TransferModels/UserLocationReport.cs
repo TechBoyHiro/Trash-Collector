@@ -8,7 +8,7 @@ namespace Trash.Models.TransferModels
     public class UserLocationReport
     {
         public long? Id { get; set; }
-        public long UserId { get; set; }
+        public int UserId { get; set; }
         public string UserName { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }

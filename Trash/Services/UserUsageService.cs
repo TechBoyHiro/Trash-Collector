@@ -62,6 +62,16 @@ namespace Trash.Services
             return servicesusagereport;
         }
 
+        public async Task<List<Commodity>> GetCommodities()
+        {
+            return await _Context.Set<Commodity>().ToListAsync();
+        }
+
+        public async Task<List<Service>> GetServices()
+        {
+            return await _Context.Set<Service>().ToListAsync();
+        }
+
         public async Task<List<UserLocationReport>> GetUserLocations(long userid)
         {
             var locations = await _Location.Include(k => k.User).Where(x => x.UserId == userid).ToListAsync();
@@ -74,7 +84,7 @@ namespace Trash.Services
                     Id = item.Id,
                     Latitude = item.Latitude,
                     Longitude = item.Longitude,
-                    UserId = item.UserId,
+                    UserId = (int)item.UserId,
                     UserName = item.User.UserName
                 });
             }
