@@ -49,6 +49,19 @@ namespace Trash.Controllers
         }
 
 
+        [HttpGet("datetime")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDate()
+        {
+            var ApiResult = new ApiResult<object>()
+            {
+                Data = DateTime.Now,
+                IsSuccess = true,
+                StatusCode = ApiResultStatusCode.Success
+            };
+            return Ok(ApiResult);
+        }
+
         /// <summary>
         /// get a user by userid hidden in token
         /// </summary>
@@ -151,7 +164,7 @@ namespace Trash.Controllers
         /// </summary>
         /// <param name="loginRequest"></param>
         /// <returns></returns>
-        [HttpGet("login")]
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {

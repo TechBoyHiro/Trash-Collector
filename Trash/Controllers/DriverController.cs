@@ -66,7 +66,7 @@ namespace Trash.Controllers
         /// </summary>
         /// <param name="orderReport"></param>
         /// <returns></returns>
-        [HttpPost("updateuserorder")]
+        [HttpPut("updateuserorder")]
         public async Task<IActionResult> UpdateOrder(DriverOrderReport orderReport)
         {
             if (orderReport == null)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,8 +11,12 @@ namespace Trash.Models.TransferModels
     {
         [Required]
         public long UserId { get; set; }
-        [Required]
-        public long UserLocationId { get; set; }
+        public long? UserLocationId { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public string Address { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string UserLocationName { get; set; }
         public List<TrashRequest> Trashes { get; set; }
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has
         [StringLength(500)]

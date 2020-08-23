@@ -48,7 +48,7 @@ namespace Trash
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseRouting();

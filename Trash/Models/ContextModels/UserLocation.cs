@@ -19,6 +19,9 @@ namespace Trash.Models.ContextModels
         public string Address { get; set; }
         [StringLength(500)]
         public string Description { get; set; }
+        [StringLength(150)]
+        public string Name { get; set; }
+        public bool? IsDeleted { get; set; } 
 
         // Navigation Properties
 

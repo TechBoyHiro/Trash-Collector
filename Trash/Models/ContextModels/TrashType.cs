@@ -10,6 +10,7 @@ namespace Trash.Models.ContextModels
         public long Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }   // Per Kilogerams
+        public string ImageURL { get; set; }
 
         // Navigation Properties
 

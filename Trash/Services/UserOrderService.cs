@@ -15,12 +15,14 @@ namespace Trash.Services
     {
         private readonly DataContext _Context;
         private readonly TrashService _TrashService;
+        private readonly UserUsageService _UserService;
 
-        public UserOrderService(DataContext context,TrashService trashService)
+        public UserOrderService(DataContext context,TrashService trashService,UserUsageService userUsageService)
             :base(context)
         {
             _Context = context;
             _TrashService = trashService;
+            _UserService = userUsageService;
         }
 
         public async Task<List<OrderReport>> GetUserOrders(long userid)
@@ -130,13 +132,37 @@ namespace Trash.Services
 
         public async Task<Order> CreateUserOrder(OrderRequest orderRequest)
         {
+            if (orderRequest.UserLocationId <= 0 || orderRequest.UserLocationId == null)
+            {
+                var userLocationId = await _UserService.AddUserLocation(orderRequest.UserId, new UserLocationReport()
+                {
+                    Address = orderRequest.Address,
+                    Latitude = (double)orderRequest.Latitude,
+                    Longitude = (double)orderRequest.Longitude,
+                    Name = orderRequest.UserLocationName
+                });
+                var New_Order = new Order()
+                {
+                    Description = orderRequest.Description,
+                    IsTaken = false,
+                    SubmitDate = DateTime.Now,
+                    TotalScore = orderRequest.TotalScore,
+                    UserLocationId = userLocationId,
+                    UserId = orderRequest.UserId,
+                    PaymentMethod = Models.Enums.PaymentMethod.None,
+                    OrderStatus = Models.Enums.OrderStatus.Waiting
+                };
+                New_Order.Id = await AddOrder(New_Order);
+                await _TrashService.SetOrderTrashes(orderRequest.Trashes, New_Order.Id, orderRequest.UserId);
+                return New_Order;
+            }
             var Order = new Order()
             {
                 Description = orderRequest.Description,
                 IsTaken = false,
                 SubmitDate = DateTime.Now,
                 TotalScore = orderRequest.TotalScore,
-                UserLocationId = orderRequest.UserLocationId,
+                UserLocationId = (long)orderRequest.UserLocationId,
                 UserId = orderRequest.UserId,
                 PaymentMethod = Models.Enums.PaymentMethod.None,
                 OrderStatus = Models.Enums.OrderStatus.Waiting

@@ -74,7 +74,7 @@ namespace Trash.Services
 
         public async Task<List<UserLocationReport>> GetUserLocations(long userid)
         {
-            var locations = await _Location.Include(k => k.User).Where(x => x.UserId == userid).ToListAsync();
+            var locations = await _Location.Include(k => k.User).Where(x => x.UserId == userid && x.IsDeleted == false).ToListAsync();
             var userlocations = new List<UserLocationReport>();
             foreach(UserLocation item in locations)
             {
@@ -91,20 +91,20 @@ namespace Trash.Services
             return userlocations;
         }
 
-        public async Task AddUserLocation(long userid,List<UserLocationReport> userLocations)
+        public async Task<long> AddUserLocation(long userid,UserLocationReport userLocation)
         {
-            foreach(UserLocationReport item in userLocations)
+            var entity = _Context.Set<UserLocation>().Add(new UserLocation()
             {
-                _Context.Set<UserLocation>().Add(new UserLocation()
-                {
-                    Address = item.Address,
-                    Description = item.Description,
-                    Latitude = item.Latitude,
-                    Longitude = item.Longitude,
-                    UserId = userid
-                });
-            }
+                Address = userLocation.Address,
+                Description = userLocation.Description,
+                Latitude = userLocation.Latitude,
+                Longitude = userLocation.Longitude,
+                UserId = userid,
+                Name = userLocation.Name,
+                IsDeleted = false
+            });
             await _Context.SaveChangesAsync();
+            return entity.Entity.Id;
         }
 
         public async Task<UserService> AddUserService(long userid ,long serviceid)

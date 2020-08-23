@@ -9,6 +9,7 @@ using Trash.InfraStructure;
 using Trash.Models.TransferModels;
 using Trash.Models.ContextModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Trash.Controllers
 {
@@ -74,6 +75,7 @@ namespace Trash.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("trashtypes")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetTrashTypes()
         {
             var ApiResult = new ApiResult<List<TrashType>>()
@@ -92,7 +94,7 @@ namespace Trash.Controllers
         /// <param name="trashtypeid"></param>
         /// <param name="newprice"></param>
         /// <returns></returns>
-        [HttpPost("updatetrashtype")]
+        [HttpPut("updatetrashtype")]
         public async Task<IActionResult> UpdateTrashType(long trashtypeid,double newprice)
         {
             if (trashtypeid == 0 || newprice < 0)
@@ -109,23 +111,5 @@ namespace Trash.Controllers
             };
             return Ok(ApiResult);
         }
-
-        /// <summary>
-        /// set the trashes of order by user .... the correctness of scores and weights will check by driver ..... 
-        /// </summary>
-        /// <param name="trashRequests"></param>
-        /// <returns></returns>
-        //public async Task<IActionResult> SetOrderTrashes([FromBody] List<TrashRequest> trashRequests)
-        //{
-        //    if (trashRequests == null)
-        //        return BadRequest(new ApiResult()
-        //        {
-        //            Message = "اشغال های وارد شده معتبر نمیباشند",
-        //            IsSuccess = false,
-        //            StatusCode = ApiResultStatusCode.BadRequest
-        //        });
-        //    await _TrashService.SetOrderTrashes(trashRequests);
-        //    return Ok(new ApiResult() { IsSuccess = true, StatusCode = ApiResultStatusCode.Success });
-        //}
     }
 }

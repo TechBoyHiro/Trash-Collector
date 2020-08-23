@@ -91,14 +91,14 @@ namespace Trash.Controllers
         }
 
         [HttpPost("userlocations")]
-        public async Task<IActionResult> AddUserLocation([FromBody] List<UserLocationReport> userLocations)
+        public async Task<IActionResult> AddUserLocation([FromBody] UserLocationReport userLocation)
         {
-            if(userLocations == null)
+            if(userLocation == null)
             {
                 return BadRequest(new ApiResult() { Message = "ادرس های ارسالی معتبر نمیباشد", IsSuccess = false, StatusCode = ApiResultStatusCode.ListEmpty });
             }
             long userid = int.Parse(HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
-            await _UserUsageService.AddUserLocation(userid, userLocations);
+            await _UserUsageService.AddUserLocation(userid, userLocation);
             return Ok(new ApiResult() { IsSuccess = true, StatusCode = ApiResultStatusCode.Success });
         }
 
