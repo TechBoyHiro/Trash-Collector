@@ -16,7 +16,7 @@ namespace Trash.Models.ContextModels
         public int Score { get; set; }
         [Required]
         public int Stock { get; set; }
-
+        public string ImageURL { get; set; }
         // Navigation Properties
 
         public ICollection<UserCommodity> UserCommodities { get; set; }

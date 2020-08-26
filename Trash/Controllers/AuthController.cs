@@ -55,7 +55,7 @@ namespace Trash.Controllers
         {
             var ApiResult = new ApiResult<object>()
             {
-                Data = DateTime.Now,
+                Data = PersianDateTime.Now,
                 IsSuccess = true,
                 StatusCode = ApiResultStatusCode.Success
             };
