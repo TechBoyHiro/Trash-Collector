@@ -14,8 +14,8 @@ namespace Trash.Models.TransferModels
         [DefaultValue(null)]
         public long? DriverId { get; set; }
         public string DriverUserName{get;set;}
-        public double OrderLat { get; set; }
-        public double OrderLong { get; set; }
+        public double? OrderLat { get; set; }
+        public double? OrderLong { get; set; }
         public string OrderAddress { get; set; }
         public List<TrashReport> Trashes { get; set; }
         public DateTime SubmitDate { get; set; }

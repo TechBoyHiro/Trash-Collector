@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -12,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Trash.Configurations;
+using Trash.InfraStructure;
 
 namespace Trash
 {
@@ -47,7 +52,9 @@ namespace Trash
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
             }
+
             app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseAuthentication();

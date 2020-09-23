@@ -130,7 +130,7 @@ namespace Trash.Services
             return OrderReports;
         }
 
-        public async Task<Order> CreateUserOrder(OrderRequest orderRequest)
+        public async Task<OrderReport> CreateUserOrder(OrderRequest orderRequest)
         {
             if (orderRequest.UserLocationId <= 0 || orderRequest.UserLocationId == null)
             {
@@ -152,9 +152,28 @@ namespace Trash.Services
                     PaymentMethod = Models.Enums.PaymentMethod.None,
                     OrderStatus = Models.Enums.OrderStatus.Waiting
                 };
-                New_Order.Id = await AddOrder(New_Order);
-                await _TrashService.SetOrderTrashes(orderRequest.Trashes, New_Order.Id, orderRequest.UserId);
-                return New_Order;
+                try
+                {
+                    New_Order.Id = await AddOrder(New_Order);
+                    var OrderReport2 = new OrderReport()
+                    {
+                        Description = New_Order.Description,
+                        OrderAddress = orderRequest.Address,
+                        OrderLat = (double)orderRequest.Latitude,
+                        OrderLong = (double)orderRequest.Longitude,
+                        OrderStatus = (int)New_Order.OrderStatus,
+                        SubmitDate = New_Order.SubmitDate,
+                        TakenDate = New_Order.TakenDate,
+                        TotalScore = New_Order.TotalScore,
+                        UserId = New_Order.UserId
+                    };
+                    await _TrashService.SetOrderTrashes(orderRequest.Trashes, New_Order.Id, orderRequest.UserId);
+                    return OrderReport2;
+                }
+                catch(Exception e)
+                {
+                    return null;
+                }
             }
             var Order = new Order()
             {
@@ -168,8 +187,21 @@ namespace Trash.Services
                 OrderStatus = Models.Enums.OrderStatus.Waiting
             };
             Order.Id = await AddOrder(Order);
+            var locationDetail = await _UserService.GetLocationDetail((long)orderRequest.UserLocationId);
+            var OrderReport = new OrderReport()
+            {
+                Description = Order.Description,
+                OrderAddress = locationDetail.Address,
+                OrderLat = (double)locationDetail.Latitude,
+                OrderLong = (double)locationDetail.Longitude,
+                OrderStatus = (int)Order.OrderStatus,
+                SubmitDate = Order.SubmitDate,
+                TakenDate = Order.TakenDate,
+                TotalScore = Order.TotalScore,
+                UserId = Order.UserId
+            };
             await _TrashService.SetOrderTrashes(orderRequest.Trashes, Order.Id, orderRequest.UserId);
-            return Order;
+            return OrderReport;
         }
 
 

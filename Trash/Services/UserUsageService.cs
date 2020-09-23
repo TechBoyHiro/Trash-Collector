@@ -91,6 +91,11 @@ namespace Trash.Services
             return userlocations;
         }
 
+        public async Task<UserLocation> GetLocationDetail(long locationId)
+        {
+            return await _Location.Where(x => x.Id == locationId).FirstAsync();
+        }
+
         public async Task<long> AddUserLocation(long userid,UserLocationReport userLocation)
         {
             var entity = _Context.Set<UserLocation>().Add(new UserLocation()

@@ -17,11 +17,13 @@ namespace Trash.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService; 
+        private readonly AuthService _authService;
+        private readonly UserService _userService;
 
-        public AuthController(AuthService authService)
+        public AuthController(AuthService authService , UserService userService)
         {
             _authService = authService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -91,33 +93,46 @@ namespace Trash.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AddUser(NewUserRequest user)
         {
-            if (user == null)
+            try
             {
-                return BadRequest(new ApiResult() { Message = "کاربر یافت نشد", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
-            }
-            if(_authService.CheckUserExist(user.Phone,user.UserName).Result)
-            {
-                return BadRequest(new ApiResult() { Message = "شماره تلفن یا نام کاربری تکراری است",IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest});
-            }
-
-            var ApiResult = new ApiResult<User>()
-            {
-                Data = await _authService.AddUser(new User()
+                if (user == null)
                 {
-                    Name = user.Name,
-                    UserName = user.UserName,
-                    Phone = user.Phone,
-                    Age = user.Age,
-                    Email = user.Email,
-                    Gender = user.Gender,
-                    IsDeleted = false,
-                    RegisterDate = DateTime.UtcNow,
-                    IsDriver = false,
-                }, user.Password),
-                IsSuccess = true,
-                StatusCode = ApiResultStatusCode.Success
-            };
-            return Ok(ApiResult);
+                    return BadRequest(new ApiResult() { Message = "کاربر یافت نشد", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
+                }
+                if (_authService.CheckUserExist(user.Phone, user.UserName).Result)
+                {
+                    return BadRequest(new ApiResult() { Message = "شماره تلفن یا نام کاربری تکراری است", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
+                }
+
+                var ApiResult = new ApiResult<User>()
+                {
+                    Data = await _authService.AddUser(new User()
+                    {
+                        Name = user.Name,
+                        UserName = user.UserName,
+                        Phone = user.Phone,
+                        Age = user.Age,
+                        Email = user.Email,
+                        Gender = user.Gender,
+                        IsDeleted = false,
+                        RegisterDate = DateTime.UtcNow,
+                        IsDriver = false,
+                    }, user.Password),
+                    IsSuccess = true,
+                    StatusCode = ApiResultStatusCode.Success
+                };
+                return Ok(ApiResult);
+            }
+            catch(Exception e)
+            {
+                var ApiResult = new ApiResult()
+                {
+                    Message = e.Message,
+                    IsSuccess = false,
+                    StatusCode = ApiResultStatusCode.ServerError
+                };
+                return Ok(ApiResult);
+            }
         }
 
         /// <summary>
@@ -158,6 +173,37 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
+        [HttpPost("updateuser")]
+        public async Task<IActionResult> UpdateUser(NewUserRequest newUserRequest)
+        {
+            try
+            {
+                if (newUserRequest == null)
+                {
+                    return BadRequest(new ApiResult() { Message = "کاربر یافت نشد", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
+                }
+                long userid = int.Parse(HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).First().Value);
+                if (userid == 0)
+                    return BadRequest(new ApiResult() { Message = "کاربر یافت نشد", IsSuccess = false, StatusCode = ApiResultStatusCode.BadRequest });
+                var ApiResult = new ApiResult<NewUserRequest>()
+                {
+                    Data = await _authService.UpdateUser(userid,newUserRequest),
+                    IsSuccess = true,
+                    StatusCode = ApiResultStatusCode.Success
+                };
+                return Ok(ApiResult);
+            }
+            catch (Exception e)
+            {
+                var ApiResult = new ApiResult()
+                {
+                    Message = e.Message,
+                    IsSuccess = false,
+                    StatusCode = ApiResultStatusCode.ServerError
+                };
+                return Ok(ApiResult);
+            }
+        }
 
         /// <summary>
         /// login for users and drivers ...

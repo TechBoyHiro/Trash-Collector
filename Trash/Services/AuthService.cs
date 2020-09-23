@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Text;
+using Trash.Models.TransferModels;
 
 namespace Trash.Services
 {
@@ -33,6 +34,49 @@ namespace Trash.Services
             user.PasswordHash = PasswordHash;
             user.PasswordSalt = PasswordSalt;
             return await Add(user);
+        }
+
+        public async Task<NewUserRequest> UpdateUser(long id, NewUserRequest updateUser)
+        {
+            var User = await _Context.Set<User>().FindAsync(id);
+            if (updateUser.Password == null || updateUser.Password == "")
+            {
+                if (updateUser.Age >= 0)
+                    User.Age = updateUser.Age;
+                if (updateUser.Email != null)
+                    User.Email = updateUser.Email;
+                User.Gender = updateUser.Gender;
+                if (updateUser.Name != null)
+                    User.Name = updateUser.Name;
+                if (updateUser.Phone != null)
+                    User.Phone = updateUser.Phone;
+                if (updateUser.UserName != null)
+                    User.UserName = updateUser.UserName;
+            }
+            else
+            {
+                byte[] PasswordSalt = new byte[1024 / 8];
+                if (updateUser.Phone != null)
+                    PasswordSalt = Encoding.UTF8.GetBytes("#1184$+" + User.Phone);
+                else
+                    PasswordSalt = Encoding.UTF8.GetBytes("#1184$+" + updateUser.Phone);
+                byte[] PasswordHash = CreatePasswordHash(updateUser.Password, PasswordSalt);
+                User.PasswordHash = PasswordHash;
+                User.PasswordSalt = PasswordSalt;
+                if (updateUser.Age >= 0)
+                    User.Age = updateUser.Age;
+                if (updateUser.Email != null)
+                    User.Email = updateUser.Email;
+                User.Gender = updateUser.Gender;
+                if (updateUser.Name != null)
+                    User.Name = updateUser.Name;
+                if (updateUser.Phone != null)
+                    User.Phone = updateUser.Phone;
+                if (updateUser.UserName != null)
+                    User.UserName = updateUser.UserName;
+            }
+            _Context.Set<User>().Update(User);
+            return updateUser;
         }
 
         public async Task<bool> CheckUserExist(string PhoneNumber,string UserName)

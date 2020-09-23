@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Trash.InfraStructure;
 
 namespace Trash.Controllers
 {
@@ -19,7 +20,14 @@ namespace Trash.Controllers
         public async Task<IActionResult> GetAsset(string name)
         {
             //var image = File.OpenRead("/assets/" + name);
-            return new PhysicalFileResult(Environment.CurrentDirectory + "/assets/" + name, "image/jpeg");
+            var apiresult = new ApiResult<PhysicalFileResult>()
+            {
+                Data = new PhysicalFileResult(Environment.CurrentDirectory + "/assets/" + name, "image/jpeg"),
+                Message = Environment.CurrentDirectory + "/assets/" + name,
+                IsSuccess = true,
+                StatusCode = ApiResultStatusCode.Success
+            };
+            return Ok(apiresult);
         }
 
         //public string GetPhysicalPathFromRelativeUrl(string url)

@@ -97,11 +97,11 @@ namespace Trash.Controllers
                 return BadRequest(new ApiResult()
                 {
                     Message = "اشغال های وارد شده معتبر نمیباشند",
-                    IsSuccess = false,
+                    IsSuccess = false,  
                     StatusCode = ApiResultStatusCode.BadRequest
                 });
 
-            var ApiResult = new ApiResult<Order>()
+            var ApiResult = new ApiResult<OrderReport>()
             {
                 Data = await _UserOrderService.CreateUserOrder(orderRequest),
                 IsSuccess = true,
