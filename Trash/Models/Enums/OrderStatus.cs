@@ -10,13 +10,13 @@ namespace Trash.Models.Enums
     {
         [Display(Name ="در انتظار پذیرش راننده")]
         Waiting =1,
-        [Display(Name ="تایید شده توسط راننده")]
-        Confirmed=2,
+        //[Display(Name ="تایید شده توسط راننده")]
+        //Confirmed=2,
         [Display(Name ="در حال جمع اوری")]
-        Taking=3,
+        Taking=2,
         [Display(Name = "اتمام جمع اوری")]
-        Done=4,
+        Done=3,
         [Display(Name = "حذف شده توسط کاربر")]
-        Deleted = 5
+        Deleted = 4
     }
 }

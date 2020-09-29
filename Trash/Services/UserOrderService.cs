@@ -69,7 +69,7 @@ namespace Trash.Services
         /// <returns></returns>
         public async Task<List<WaitingOrder>> GetWaitingOrders()
         {
-            var orders = await _Table.Include(v => v.User).Include(b => b.UserLocation).Where(x => x.OrderStatus == Models.Enums.OrderStatus.Waiting).ToListAsync();
+            var orders = await _Table.Include(v => v.User).Include(b => b.UserLocation).Where(x => x.OrderStatus == Models.Enums.OrderStatus.Waiting && x.TakenDate >= DateTime.UtcNow && x.IsTaken == false).ToListAsync();
             var waitingorders = new List<WaitingOrder>();
             foreach(Order item in orders)
             {
@@ -80,10 +80,12 @@ namespace Trash.Services
                     Longitude = item.UserLocation.Longitude,
                     OrderId = item.Id,
                     SubmitDate = item.SubmitDate,
+                    TakenDate = item.TakenDate,
                     UserName = item.User.UserName,
                     UserPhone = item.User.Phone
                 });
             }
+            waitingorders = waitingorders.OrderBy(x => x.SubmitDate).ToList();
             return waitingorders;
         }
 
@@ -93,7 +95,7 @@ namespace Trash.Services
             if(order != null)
             {
                 order.DriverId = driverid;
-                order.OrderStatus = Models.Enums.OrderStatus.Confirmed;
+                order.OrderStatus = Models.Enums.OrderStatus.Taking;
                 await Update(order);
                 return;
             }
@@ -119,7 +121,7 @@ namespace Trash.Services
                     OrderLat = item.UserLocation.Latitude,
                     OrderLong = item.UserLocation.Longitude,
                     SubmitDate = item.SubmitDate,
-                    TakenDate = (DateTime)item.TakenDate,
+                    TakenDate = item.TakenDate,
                     TotalScore = item.TotalScore,
                     Trashes = _TrashService.GetUserTrashsByOrderId(userid, item.Id).Result,
                     UserId = item.UserId,
@@ -146,6 +148,7 @@ namespace Trash.Services
                     Description = orderRequest.Description,
                     IsTaken = false,
                     SubmitDate = DateTime.Now,
+                    TakenDate = orderRequest.TakenDate,
                     TotalScore = orderRequest.TotalScore,
                     UserLocationId = userLocationId,
                     UserId = orderRequest.UserId,
@@ -180,6 +183,7 @@ namespace Trash.Services
                 Description = orderRequest.Description,
                 IsTaken = false,
                 SubmitDate = DateTime.Now,
+                TakenDate = orderRequest.TakenDate,
                 TotalScore = orderRequest.TotalScore,
                 UserLocationId = (long)orderRequest.UserLocationId,
                 UserId = orderRequest.UserId,
@@ -220,14 +224,24 @@ namespace Trash.Services
         public async Task UpdateUserOrders(DriverOrderReport orderReport)
         {
             var order = await GetById(orderReport.OrderId);
+            order.OrderStatus = Models.Enums.OrderStatus.Done;
+            int new_score = 0;
             var trashes = await _TrashService.GetTrashesByOrderId(orderReport.OrderId);
             foreach(DriverTrashReport item in orderReport.TrashReports)
             {
                 var trash = trashes.Where(x => x.Id == item.TrashId).First();
                 trash.Weight = item.Weight;
                 trash.Score = item.Score;
+                new_score += item.Score;
                 await _TrashService.Update(trash);
             }
+            order.TotalScore = new_score;
+            _Context.Set<Order>().Update(order);
+            foreach(Trash.Models.ContextModels.Trash item in trashes)
+            {
+                _Context.Set<Trash.Models.ContextModels.Trash>().Update(item);
+            }
+            await _Context.SaveChangesAsync();
         }
     }
 }

@@ -20,7 +20,8 @@ namespace Trash.Models.ContextModels
         [Column(TypeName ="smalldatetime")]
         public DateTime SubmitDate { get; set; }
         [Column(TypeName = "smalldatetime")]
-        public DateTime? TakenDate { get; set; }
+        [Required]
+        public DateTime TakenDate { get; set; }
         public bool? IsTaken { get; set; }
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has
         public OrderStatus OrderStatus { get; set; }

@@ -85,7 +85,9 @@ namespace Trash.Services
                     Latitude = item.Latitude,
                     Longitude = item.Longitude,
                     UserId = (int)item.UserId,
-                    UserName = item.User.UserName
+                    UserName = item.User.UserName,
+                    Description = item.Description,
+                    Name = item.Name
                 });
             }
             return userlocations;

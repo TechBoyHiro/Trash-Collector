@@ -21,5 +21,6 @@ namespace Trash.Models.TransferModels
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has
         [StringLength(500)]
         public string Description { get; set; }
+        public DateTime TakenDate { get; set; }
     }
 }

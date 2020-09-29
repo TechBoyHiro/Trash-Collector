@@ -17,17 +17,32 @@ namespace Trash.Controllers
     public class AssetController : ControllerBase
     {
         [HttpGet("getasset/{name}")]
-        public async Task<IActionResult> GetAsset(string name)
+        public async Task<FileStreamResult> GetAsset(string name)
         {
-            //var image = File.OpenRead("/assets/" + name);
-            var apiresult = new ApiResult<PhysicalFileResult>()
+            try
             {
-                Data = new PhysicalFileResult(Environment.CurrentDirectory + "/assets/" + name, "image/jpeg"),
-                Message = Environment.CurrentDirectory + "/assets/" + name,
-                IsSuccess = true,
-                StatusCode = ApiResultStatusCode.Success
-            };
-            return Ok(apiresult);
+                //var fg = new FileStream(Environment.CurrentDirectory + "/assets/" + name, FileMode.Open);
+                //MemoryStream MS = new MemoryStream();
+                //await fg.CopyToAsync(MS);
+                //MS.Position = 0;
+
+                var imagefile = System.IO.File.OpenRead(Environment.CurrentDirectory + "/assets/" + name);
+
+                //var apiresult = new ApiResult<FileStreamResult>()
+                //{
+                //    //Data = new PhysicalFileResult(Environment.CurrentDirectory + "/assets/" + name, "image/jpeg"),
+                //    Data = File(imagefile, "image/jpeg"),
+                //    Message = Environment.CurrentDirectory + "/assets/" + name,
+                //    IsSuccess = true,
+                //    StatusCode = ApiResultStatusCode.Success
+                //};
+                //Response.ContentType = new MediaTypeHeaderValue("application/octet-stream").ToString();
+                return File(imagefile, "image/jpeg");
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         //public string GetPhysicalPathFromRelativeUrl(string url)

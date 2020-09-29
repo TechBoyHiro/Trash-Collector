@@ -14,5 +14,6 @@ namespace Trash.Models.TransferModels
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public DateTime SubmitDate { get; set; }
+        public DateTime TakenDate { get; set; }
     }
 }
