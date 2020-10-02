@@ -17,7 +17,7 @@ namespace Trash.Models.ContextModels
         [Required]
         public long UserLocationId { get; set; }
         [Required]
-        [Column(TypeName ="smalldatetime")]
+        [Column(TypeName = "smalldatetime")]
         public DateTime SubmitDate { get; set; }
         [Column(TypeName = "smalldatetime")]
         [Required]

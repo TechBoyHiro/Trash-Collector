@@ -83,6 +83,8 @@ namespace Trash.Configurations
             services.AddScoped<Repository<User>>();
             services.AddScoped<Repository<Trash.Models.ContextModels.Trash>>();
             services.AddScoped<Repository<Order>>();
+            services.AddScoped<CommodityRepo>();
+            services.AddScoped<ServiceRepo>();
             services.AddScoped<JwtService>();
             services.AddScoped<AuthService>();
             services.AddScoped<TrashService>();

@@ -16,10 +16,16 @@ namespace Trash.Services
         private readonly DbSet<UserCommodity> _Commodity;
         private readonly DbSet<UserService> _Service;
         private readonly DbSet<UserLocation> _Location;
+        private readonly ServiceRepo serviceRepo;
+        private readonly CommodityRepo commodityRepo;
+        private readonly Repository<User> userRepo;
 
-        public UserUsageService(DataContext context)
+        public UserUsageService(DataContext context,ServiceRepo serviceRepo,CommodityRepo commodityRepo,Repository<User> userrepo)
         {
             _Context = context;
+            this.commodityRepo = commodityRepo;
+            this.serviceRepo = serviceRepo;
+            userRepo = userrepo;
             _Commodity = context.Set<UserCommodity>();
             _Service = context.Set<UserService>();
             _Location = context.Set<UserLocation>();
@@ -116,30 +122,45 @@ namespace Trash.Services
 
         public async Task<UserService> AddUserService(long userid ,long serviceid)
         {
-            var entity = _Context.Set<UserService>().Add(new UserService()
+            var service = await serviceRepo.GetById(serviceid);
+            var user = await userRepo.GetById(userid);
+            if (user.Score >= service.Score)
             {
-                ServiceId = serviceid,
-                Start = DateTime.Now,
-                UserId = userid
-            });
-            await _Context.SaveChangesAsync();
-            return entity.Entity;
+                var entity = _Context.Set<UserService>().Add(new UserService()
+                {
+                    ServiceId = serviceid,
+                    Start = DateTime.Now,
+                    UserId = userid
+                });
+                user.Score -= service.Score;
+                await userRepo.Update(user);
+                await _Context.SaveChangesAsync();
+                return entity.Entity;
+            }
+            else return null;
         }
 
         public async Task<UserCommodity> AddUserCommodity(long userid ,long commodityid ,int number)
         {
-            var entity = _Context.Set<UserCommodity>().Add(new UserCommodity()
+            var commodity = await commodityRepo.GetById(commodityid);
+            var user = await userRepo.GetById(userid);
+            if (user.Score >= (commodity.Score * number) && commodity.Stock >= number)
             {
-                CommodityId = commodityid,
-                DateTime = DateTime.Now,
-                UserId = userid,
-                Number = number
-            });
-            var commodity = await _Context.Set<Commodity>().Where(x => x.Id == commodityid).FirstAsync();
-            commodity.Stock -= number;
-            _Context.Set<Commodity>().Update(commodity);
-            await _Context.SaveChangesAsync();
-            return entity.Entity;
+                var entity = _Context.Set<UserCommodity>().Add(new UserCommodity()
+                {
+                    CommodityId = commodityid,
+                    DateTime = DateTime.Now,
+                    UserId = userid,
+                    Number = number
+                });
+                commodity.Stock -= number;
+                user.Score -= (commodity.Score * number);
+                await commodityRepo.Update(commodity);
+                await userRepo.Update(user);
+                await _Context.SaveChangesAsync();
+                return entity.Entity;
+            }
+            else return null;
         }
     }
 }

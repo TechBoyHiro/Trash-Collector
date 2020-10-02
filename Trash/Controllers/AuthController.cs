@@ -18,12 +18,10 @@ namespace Trash.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
-        private readonly UserService _userService;
 
-        public AuthController(AuthService authService , UserService userService)
+        public AuthController(AuthService authService)
         {
             _authService = authService;
-            _userService = userService;
         }
 
         /// <summary>
