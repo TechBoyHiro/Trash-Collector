@@ -80,6 +80,22 @@ namespace Trash.Controllers
             return Ok(ApiResult);
         }
 
-
+        [HttpGet("getorders")]
+        public async Task<IActionResult> GetDriverOrders()
+        {
+            var roles = HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
+            if (roles.Contains("driver"))
+            {
+                long driverid = int.Parse(HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
+                var ApiResult = new ApiResult<List<OrderReport>>()
+                {
+                    Data = await _UserOrderService.GetDriverOrders(driverid),
+                    IsSuccess = true,
+                    StatusCode = ApiResultStatusCode.Success
+                };
+                return Ok(ApiResult);
+            }
+            return BadRequest(new ApiResult() { IsSuccess = false, Message = "کاربر دسترسی لازم را ندارد", StatusCode = ApiResultStatusCode.Forbidden });
+        }
     }
 }

@@ -63,6 +63,47 @@ namespace Trash.Services
             }
         }
 
+     
+        public async Task<List<OrderReport>> GetDriverOrders(long driverid)
+        {
+            try
+            {
+                var waitingorders = await _Table.Include(v => v.User).Include(o => o.Driver).Include(p => p.UserLocation).Where(c => c.IsTaken == true).ToListAsync();
+                var orders = waitingorders.Where(x => x.DriverId == driverid).ToList();
+                var OrderReports = new List<OrderReport>();
+                foreach (Order item in orders)
+                {
+                    var orderreport = new OrderReport()
+                    {
+                        DriverId = item.DriverId,
+                        OrderAddress = item.UserLocation.Address,
+                        OrderLat = item.UserLocation.Latitude,
+                        OrderLong = item.UserLocation.Longitude,
+                        SubmitDate = item.SubmitDate,
+                        TakenDate = item.TakenDate,
+                        TotalScore = item.TotalScore,
+                        UserId = item.UserId,
+                        UserName = item.User.UserName,
+                        OrderStatus = (int)item.OrderStatus
+                    };
+                    orderreport.Trashes = new List<TrashReport>();
+                    orderreport.Trashes = _TrashService.GetUserTrashsByOrderId(item.UserId, item.Id).Result;
+                    if (item.Driver != null)
+                    {
+                        orderreport.DriverId = item.DriverId;
+                        orderreport.DriverUserName = item.Driver.UserName;
+                    }
+                    OrderReports.Add(orderreport);
+                }
+                return OrderReports;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
         /// <summary>
         /// mostly usable for drivers
         /// </summary>
