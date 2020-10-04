@@ -18,9 +18,9 @@ namespace Trash.Models.TransferModels
         public double? OrderLong { get; set; }
         public string OrderAddress { get; set; }
         public List<TrashReport> Trashes { get; set; }
-        public DateTime SubmitDate { get; set; }
+        public CustomeDateTime SubmitDate { get; set; }
         [DefaultValue(null)]
-        public DateTime? TakenDate { get; set; }
+        public CustomeDateTime? TakenDate { get; set; }
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has
         public int OrderStatus { get; set; }
         public string Description { get; set; }

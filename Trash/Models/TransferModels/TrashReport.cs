@@ -10,8 +10,8 @@ namespace Trash.Models.TransferModels
         public long UserId { get; set; }
         public string UserName { get; set; }
         public long OrderId { get; set; }
-        public DateTime SubmitDate { get;set; }
-        public DateTime? TakenDate { get; set; }
+        public CustomeDateTime SubmitDate { get;set; }
+        public CustomeDateTime? TakenDate { get; set; }
         public string TrashTypeName { get; set; }
         public long Weight { get; set; }    
         public int? Score { get; set; }     

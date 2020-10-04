@@ -129,7 +129,7 @@ namespace Trash.Services
                 var entity = _Context.Set<UserService>().Add(new UserService()
                 {
                     ServiceId = serviceid,
-                    Start = DateTime.Now,
+                    Start = new CustomeDateTime() { Day = PersianDateTime.Now.Day, Month = PersianDateTime.Now.Month, Year = PersianDateTime.Now.Year },
                     UserId = userid
                 });
                 user.Score -= service.Score;
@@ -149,7 +149,7 @@ namespace Trash.Services
                 var entity = _Context.Set<UserCommodity>().Add(new UserCommodity()
                 {
                     CommodityId = commodityid,
-                    DateTime = DateTime.Now,
+                    DateTime = new CustomeDateTime() { Day = PersianDateTime.Now.Day, Month = PersianDateTime.Now.Month, Year = PersianDateTime.Now.Year },
                     UserId = userid,
                     Number = number
                 });

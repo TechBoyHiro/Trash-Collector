@@ -13,7 +13,7 @@ namespace Trash.Models.TransferModels
         public string Address { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public DateTime SubmitDate { get; set; }
-        public DateTime TakenDate { get; set; }
+        public CustomeDateTime SubmitDate { get; set; }
+        public CustomeDateTime TakenDate { get; set; }
     }
 }

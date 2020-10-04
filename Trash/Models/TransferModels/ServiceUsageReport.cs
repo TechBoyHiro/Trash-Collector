@@ -11,7 +11,7 @@ namespace Trash.Models.TransferModels
         public string UserName { get; set; }
         public string ServiceName { get; set; }
         public int ServiceScore { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime? FinishDate { get; set; }
+        public CustomeDateTime StartDate { get; set; }
+        public CustomeDateTime? FinishDate { get; set; }
     }
 }

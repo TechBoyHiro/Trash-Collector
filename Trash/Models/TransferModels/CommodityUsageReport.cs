@@ -12,6 +12,6 @@ namespace Trash.Models.TransferModels
         public string CommodityName { get; set; }
         public int CommodityScore { get; set; }
         public int Number { get; set; }
-        public DateTime ReceivedDate { get; set; }
+        public CustomeDateTime ReceivedDate { get; set; }
     }
 }

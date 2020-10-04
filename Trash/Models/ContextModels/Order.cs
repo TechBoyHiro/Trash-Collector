@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Trash.Models.Enums;
+using Trash.Models.TransferModels;
 
 namespace Trash.Models.ContextModels
 {
@@ -17,17 +18,18 @@ namespace Trash.Models.ContextModels
         [Required]
         public long UserLocationId { get; set; }
         [Required]
-        [Column(TypeName = "smalldatetime")]
-        public DateTime SubmitDate { get; set; }
-        [Column(TypeName = "smalldatetime")]
+        [NotMapped]
+        public CustomeDateTime SubmitDate { get; set; }
         [Required]
-        public DateTime TakenDate { get; set; }
+        [NotMapped]
+        public CustomeDateTime TakenDate { get; set; }
         public bool? IsTaken { get; set; }
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has
         public OrderStatus OrderStatus { get; set; }
         public PaymentMethod? PaymentMethod { get; set; }
         [StringLength(500)]
         public string Description { get; set; }
+
 
         // Navigation Properties
 

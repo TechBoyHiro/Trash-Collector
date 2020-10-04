@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trash.Models.ContextModels;
+using Trash.Models.TransferModels;
 
 namespace Trash.Data.DataContext
 {

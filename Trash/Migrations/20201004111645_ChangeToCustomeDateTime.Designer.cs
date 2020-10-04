@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Trash.Data.DataContext;
 
 namespace Trash.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201004111645_ChangeToCustomeDateTime")]
+    partial class ChangeToCustomeDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,6 +29,7 @@ namespace Trash.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ImageURL")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -53,9 +56,11 @@ namespace Trash.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CarColor")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CarModel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CarPelak")
@@ -66,6 +71,7 @@ namespace Trash.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAvailable")
@@ -89,6 +95,7 @@ namespace Trash.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
 
@@ -135,6 +142,7 @@ namespace Trash.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Portal")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -144,6 +152,7 @@ namespace Trash.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TrackingIssue")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("UserId")
@@ -217,9 +226,11 @@ namespace Trash.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ImageURL")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
@@ -263,9 +274,11 @@ namespace Trash.Migrations
                         .HasMaxLength(50);
 
                     b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Phone")
@@ -280,6 +293,7 @@ namespace Trash.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -320,10 +334,12 @@ namespace Trash.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(1500)")
                         .HasMaxLength(1500);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
 
@@ -337,6 +353,7 @@ namespace Trash.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
 

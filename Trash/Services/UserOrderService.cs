@@ -110,7 +110,7 @@ namespace Trash.Services
         /// <returns></returns>
         public async Task<List<WaitingOrder>> GetWaitingOrders()
         {
-            var orders = await _Table.Include(v => v.User).Include(b => b.UserLocation).Where(x => x.OrderStatus == Models.Enums.OrderStatus.Waiting && x.TakenDate >= DateTime.UtcNow && x.IsTaken == false).ToListAsync();
+            var orders = await _Table.Include(v => v.User).Include(b => b.UserLocation).Where(x => x.OrderStatus == Models.Enums.OrderStatus.Waiting && x.TakenDate.Year == PersianDateTime.Now.Year && x.TakenDate.Month == PersianDateTime.Now.Month && x.TakenDate.Day == PersianDateTime.Now.Day && x.IsTaken == false).ToListAsync();
             var waitingorders = new List<WaitingOrder>();
             foreach(Order item in orders)
             {
@@ -148,9 +148,9 @@ namespace Trash.Services
             return await _Table.Where(x => x.Id == orderid).Select(v => v.UserId).FirstAsync();
         }
 
-        public async Task<List<OrderReport>> GetUserOrdersByDate(long userid,DateTime date)
+        public async Task<List<OrderReport>> GetUserOrdersByDate(long userid,CustomeDateTime date)
         {
-            var orders = await _Table.Include(v => v.User).Include(o => o.Driver).Include(p => p.UserLocation).Where(c => c.UserId == userid && c.SubmitDate >= date && c.OrderStatus == Models.Enums.OrderStatus.Done).ToListAsync();
+            var orders = await _Table.Include(v => v.User).Include(o => o.Driver).Include(p => p.UserLocation).Where(c => c.UserId == userid && c.SubmitDate.Year == date.Year && c.SubmitDate.Month == date.Month && c.SubmitDate.Day == date.Day && c.OrderStatus == Models.Enums.OrderStatus.Done).ToListAsync();
             var OrderReports = new List<OrderReport>();
             foreach (Order item in orders)
             {
@@ -184,11 +184,12 @@ namespace Trash.Services
                     Longitude = (double)orderRequest.Longitude,
                     Name = orderRequest.UserLocationName
                 });
+                
                 var New_Order = new Order()
                 {
                     Description = orderRequest.Description,
                     IsTaken = false,
-                    SubmitDate = DateTime.Now,
+                    SubmitDate = new CustomeDateTime() { Day = PersianDateTime.Now.Day,Month = PersianDateTime.Now.Month, Year = PersianDateTime.Now.Year},
                     TakenDate = orderRequest.TakenDate,
                     TotalScore = orderRequest.TotalScore,
                     UserLocationId = userLocationId,
@@ -223,7 +224,7 @@ namespace Trash.Services
             {
                 Description = orderRequest.Description,
                 IsTaken = false,
-                SubmitDate = DateTime.Now,
+                SubmitDate = new CustomeDateTime() { Day = PersianDateTime.Now.Day, Month = PersianDateTime.Now.Month, Year = PersianDateTime.Now.Year },
                 TakenDate = orderRequest.TakenDate,
                 TotalScore = orderRequest.TotalScore,
                 UserLocationId = (long)orderRequest.UserLocationId,
@@ -267,6 +268,7 @@ namespace Trash.Services
             var order = await GetById(orderReport.OrderId);
             order.OrderStatus = Models.Enums.OrderStatus.Done;
             int new_score = 0;
+            order.IsTaken = true;
             var trashes = await _TrashService.GetTrashesByOrderId(orderReport.OrderId);
             foreach(DriverTrashReport item in orderReport.TrashReports)
             {
