@@ -372,20 +372,6 @@ namespace Trash.Migrations
                     b.ToTable("UserServices");
                 });
 
-            modelBuilder.Entity("Trash.Models.TransferModels.CustomeDateTime", b =>
-                {
-                    b.Property<int>("Day")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.ToTable("CustomeDateTime");
-                });
-
             modelBuilder.Entity("Trash.Models.ContextModels.DriverUtility", b =>
                 {
                     b.HasOne("Trash.Models.ContextModels.User", "Driver")

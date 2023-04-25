@@ -18,10 +18,10 @@ namespace Trash.Models.ContextModels
         [Required]
         public long UserLocationId { get; set; }
         [Required]
-        [NotMapped]
+        [DataType(DataType.DateTime)]
         public CustomeDateTime SubmitDate { get; set; }
         [Required]
-        [NotMapped]
+        [DataType(DataType.DateTime)]
         public CustomeDateTime TakenDate { get; set; }
         public bool? IsTaken { get; set; }
         public long TotalScore { get; set; }     // How Many Scores Does The Order Has

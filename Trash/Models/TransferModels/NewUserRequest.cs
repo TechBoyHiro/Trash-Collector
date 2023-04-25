@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Trash.Models.TransferModels
 {
-    public class NewUserRequest
+    public class NewUserRequest 
     {
         [Required]
         [StringLength(255, ErrorMessage = "نام باید حداکثر 255 کاراکتر باشد")]

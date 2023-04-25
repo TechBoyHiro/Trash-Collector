@@ -16,7 +16,6 @@ namespace Trash.Models.ContextModels
         [Required]
         public long CommodityId { get; set; }
         public int? Number { get; set; }
-        [NotMapped]
         public CustomeDateTime DateTime { get; set; }
 
         // Navigation Properties

@@ -15,10 +15,8 @@ namespace Trash.Models.ContextModels
         public long UserId { get; set; }
         [Required]
         public long ServiceId { get; set; }
-        [NotMapped]
         [Required]
         public CustomeDateTime Start { get; set; }
-        [NotMapped]
         public CustomeDateTime? Finish { get; set; }
 
         // Navigation Properties
